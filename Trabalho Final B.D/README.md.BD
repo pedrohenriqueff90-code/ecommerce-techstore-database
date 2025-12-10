@@ -1,0 +1,427 @@
+# 🛒 Sistema E-commerce - TechStore Brasil
+
+> Projeto completo de modelagem de banco de dados para sistema de e-commerce desenvolvido como Avaliação Final da disciplina de Modelagem de Banco de Dados.
+
+---
+
+## 📋 Informações do Projeto
+
+**Aluno:** Pedro Henrique Alves  
+**Curso:** DSM 1º Semestre  
+**Disciplina:** Banco de Dados  
+**Professor:** Marcio Maestrelo Funes  
+**Instituição:** FATEC Franca  
+**Data:** Dezembro de 2024
+
+---
+
+## 📑 Índice
+
+- [Sobre o Projeto](#-sobre-o-projeto)
+- [Cenário](#-cenário)
+- [Modelagem Conceitual](#-modelagem-conceitual-der)
+- [Modelagem Lógica](#-modelagem-lógica)
+- [Modelagem Física](#-modelagem-física)
+- [Dados](#-dados)
+- [CRUD](#-crud)
+- [Relatórios](#-relatórios)
+- [Como Executar](#-como-executar)
+- [Tecnologias](#-tecnologias)
+- [Estrutura do Repositório](#-estrutura-do-repositório)
+
+---
+
+## 🎯 Sobre o Projeto
+
+Este projeto apresenta a modelagem completa de um banco de dados relacional para um sistema de e-commerce fictício chamado **TechStore Brasil**, uma loja virtual especializada em produtos eletrônicos e tecnologia.
+
+O trabalho abrange todas as etapas da modelagem de banco de dados:
+- Análise de requisitos e criação de cenário
+- Modelagem conceitual (DER)
+- Modelagem lógica (tabelas, relacionamentos, normalização)
+- Modelagem física (implementação em SQL)
+- Operações CRUD
+- Consultas e relatórios gerenciais
+
+---
+
+## 🏢 Cenário
+
+### **Empresa: TechStore Brasil**
+
+A TechStore Brasil é uma loja virtual especializada na venda de produtos eletrônicos e tecnologia. Fundada em 2020, a empresa começou como uma pequena loja física em São Paulo e expandiu suas operações para o ambiente online devido à alta demanda.
+
+### **Problema Identificado**
+
+A empresa utilizava planilhas do Excel para controlar vendas, estoque e cadastro de clientes, o que gerava:
+
+- ❌ Perda de informações importantes
+- ❌ Dificuldade em rastrear pedidos
+- ❌ Impossibilidade de gerar relatórios de vendas precisos
+- ❌ Falta de controle de estoque em tempo real
+- ❌ Dificuldade em gerenciar relacionamento com fornecedores
+
+### **Solução Proposta**
+
+Desenvolvimento de um sistema de banco de dados robusto que permite:
+
+- ✅ Cadastro completo de clientes com múltiplos endereços e contatos
+- ✅ Gestão de produtos com categorias e fornecedores
+- ✅ Controle de pedidos e itens vendidos
+- ✅ Sistema de avaliações de produtos
+- ✅ Relatórios gerenciais para tomada de decisão
+- ✅ Controle de estoque automatizado
+
+### **Entidades do Sistema**
+
+1. **CLIENTES** - Cadastro dos compradores
+2. **EMAILS_CLIENTES** - Emails dos clientes (atributo multivalorado)
+3. **ENDERECOS** - Endereços de entrega
+4. **CATEGORIAS** - Classificação dos produtos
+5. **FORNECEDORES** - Empresas fornecedoras
+6. **PRODUTOS** - Itens disponíveis para venda
+7. **PEDIDOS** - Compras realizadas
+8. **ITENS_PEDIDO** - Produtos de cada pedido (relacionamento N:N)
+9. **AVALIACOES** - Avaliações dos produtos
+
+---
+
+## 📐 Modelagem Conceitual (DER)
+
+### Diagrama Entidade-Relacionamento
+
+![DER - Sistema E-commerce](./diagramas/der_ecommerce.png)
+
+### Relacionamentos Implementados
+
+| Origem | Cardinalidade | Destino | Tipo |
+|--------|---------------|---------|------|
+| CLIENTES | 1:N | EMAILS_CLIENTES | Um para Muitos |
+| CLIENTES | 1:N | ENDERECOS | Um para Muitos |
+| CLIENTES | 1:N | PEDIDOS | Um para Muitos |
+| CLIENTES | 1:N | AVALIACOES | Um para Muitos |
+| CATEGORIAS | 1:N | PRODUTOS | Um para Muitos |
+| FORNECEDORES | 1:N | PRODUTOS | Um para Muitos |
+| PEDIDOS | 1:N | ITENS_PEDIDO | Um para Muitos |
+| PRODUTOS | 1:N | ITENS_PEDIDO | Um para Muitos |
+| PRODUTOS | 1:N | AVALIACOES | Um para Muitos |
+| **PEDIDOS** | **N:N** | **PRODUTOS** | **Muitos para Muitos** |
+
+### Tipos de Atributos
+
+✅ **Atributos Simples:** nome_produto, cpf, cnpj, status, nota  
+✅ **Atributos Compostos:** endereco_completo (decomposto em rua, numero, complemento, bairro, cidade, estado, cep)  
+✅ **Atributos Multivalorados:** emails (tabela EMAILS_CLIENTES)  
+✅ **Atributos Derivados:** idade, valor_total, subtotal, media_avaliacoes  
+✅ **Chaves Primárias:** Todas as entidades possuem  
+
+---
+
+## 🧮 Modelagem Lógica
+
+A documentação completa da Modelagem Lógica está disponível em:
+
+📄 **[Modelagem_Logica_TechStore_FINAL.pdf](./Modelagem_Logica_TechStore_FINAL.pdf)**
+
+### Resumo das Tabelas
+
+**9 Tabelas Implementadas:**
+
+1. `CLIENTES` - Dados dos clientes
+2. `EMAILS_CLIENTES` - Múltiplos emails por cliente
+3. `ENDERECOS` - Endereços de entrega
+4. `CATEGORIAS` - Categorias de produtos
+5. `FORNECEDORES` - Fornecedores de produtos
+6. `PRODUTOS` - Catálogo de produtos
+7. `PEDIDOS` - Pedidos realizados
+8. `ITENS_PEDIDO` - Itens de cada pedido
+9. `AVALIACOES` - Avaliações de produtos
+
+### Normalização
+
+O banco de dados está na **3ª Forma Normal (3FN)**:
+- ✅ **1FN:** Todos os atributos são atômicos
+- ✅ **2FN:** Não há dependências parciais
+- ✅ **3FN:** Não há dependências transitivas
+
+---
+
+## 🧱 Modelagem Física
+
+### Scripts SQL Implementados
+
+O projeto contém 4 scripts SQL principais:
+
+1. **[01_create_tables.sql](./scripts/01_create_tables.sql)** - Criação de todas as tabelas com constraints e índices
+2. **[02_insert_data_FIXED.sql](./scripts/02_insert_data_FIXED.sql)** - Inserção de dados (7.120 registros)
+3. **[03_crud_operations.sql](./scripts/03_crud_operations.sql)** - Exemplos de operações CRUD
+4. **[04_reports.sql](./scripts/04_reports.sql)** - 10 consultas SQL para relatórios
+
+### Constraints Implementadas
+
+- **PRIMARY KEY:** Identificadores únicos em todas as tabelas
+- **FOREIGN KEY:** Relacionamentos entre tabelas
+- **UNIQUE:** CPF, CNPJ, Email, Nome de Categoria
+- **CHECK:** Validações (preço positivo, nota entre 1-5, formato de CPF/CNPJ)
+- **NOT NULL:** Campos obrigatórios
+- **DEFAULT:** Valores padrão
+
+### Índices para Otimização
+
+Foram criados 16 índices para otimizar consultas em:
+- Chaves estrangeiras
+- Campos de busca frequente (CPF, nome, data)
+- Campos de filtro (status, ativo)
+
+---
+
+## 📊 Dados
+
+### Quantidade de Registros
+
+| Tabela | Registros |
+|--------|-----------|
+| CLIENTES | 500 |
+| EMAILS_CLIENTES | 1.000 |
+| ENDERECOS | 750 |
+| CATEGORIAS | 20 |
+| FORNECEDORES | 50 |
+| PRODUTOS | 1.000 |
+| PEDIDOS | 800 |
+| ITENS_PEDIDO | 2.500 |
+| AVALIACOES | 1.500 |
+| **TOTAL** | **7.120** |
+
+### Geração de Dados
+
+Os dados foram gerados utilizando:
+- Função `generate_series()` do PostgreSQL
+- Dados fictícios realistas e coerentes com o cenário
+- Distribuição aleatória mas controlada
+
+---
+
+## 🔄 CRUD
+
+### Operações Implementadas
+
+O arquivo `03_crud_operations.sql` contém exemplos completos de:
+
+#### **CREATE (Inserção)**
+```sql
+INSERT INTO clientes (nome_completo, cpf, data_nascimento)
+VALUES ('Roberto Mendes Junior', '123.456.789-00', '1990-05-15')
+RETURNING *;
+```
+
+#### **READ (Consulta)**
+```sql
+SELECT c.nome_completo, c.cpf, e.email
+FROM clientes c
+INNER JOIN emails_clientes e ON c.id_cliente = e.id_cliente
+WHERE c.id_cliente = 1;
+```
+
+#### **UPDATE (Atualização)**
+```sql
+UPDATE pedidos
+SET status = 'ENVIADO'
+WHERE id_pedido = 1
+RETURNING *;
+```
+
+#### **DELETE (Exclusão)**
+```sql
+DELETE FROM avaliacoes
+WHERE id_avaliacao = 100
+RETURNING *;
+```
+
+### Prints das Operações
+
+Os prints das operações CRUD executadas estão em:
+
+📁 **[/prints/crud/](./prints/crud/)**
+
+- `01_create.png` - Operação de inserção
+- `02_read.png` - Operação de consulta
+- `03_update.png` - Operação de atualização
+- `04_delete.png` - Operação de exclusão
+
+---
+
+## 📈 Relatórios
+
+### 10 Consultas SQL Implementadas
+
+#### **1. Top 10 Clientes que Mais Compraram**
+Identifica os melhores clientes por valor total gasto.
+
+#### **2. Produtos Mais Vendidos**
+Lista produtos campeões de venda com receita total.
+
+#### **3. Vendas por Categoria**
+Analisa performance das categorias de produtos.
+
+#### **4. Análise de Pedidos por Status**
+Acompanha distribuição dos pedidos por status.
+
+#### **5. Produtos com Baixo Estoque**
+Identifica produtos que precisam de reposição.
+
+#### **6. Faturamento por Período**
+Mostra evolução das vendas nos últimos 12 meses.
+
+#### **7. Avaliações de Produtos**
+Lista produtos melhor e pior avaliados.
+
+#### **8. Performance dos Fornecedores**
+Avalia fornecedores por vendas e avaliações.
+
+#### **9. Análise de Formas de Pagamento**
+Entende preferências de pagamento dos clientes.
+
+#### **10. Clientes por Localização**
+Identifica distribuição geográfica dos clientes.
+
+### Prints dos Relatórios
+
+Os prints dos relatórios executados estão em:
+
+📁 **[/prints/relatorios/](./prints/relatorios/)**
+
+### Recursos SQL Utilizados
+
+✅ SELECT com múltiplas tabelas  
+✅ WHERE com filtros complexos  
+✅ JOIN (INNER, LEFT)  
+✅ GROUP BY e agregações (SUM, AVG, COUNT)  
+✅ ORDER BY para ordenação  
+✅ HAVING para filtrar grupos  
+✅ Subconsultas  
+✅ Funções de janela (OVER)  
+✅ CASE WHEN  
+
+---
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+
+- Conta no [Supabase](https://supabase.com) (gratuita)
+- Navegador web
+
+### Passo a Passo
+
+1. **Acesse o Supabase**
+   - Faça login em https://supabase.com
+   - Crie um novo projeto
+
+2. **Execute os scripts na ordem**
+   
+   Abra o SQL Editor do Supabase e execute:
+   
+   **a)** `01_create_tables.sql` - Cria as tabelas
+   
+   **b)** `02_insert_data_FIXED.sql` - Insere os dados
+   
+   **c)** `03_crud_operations.sql` - (Opcional) Testa operações CRUD
+   
+   **d)** `04_reports.sql` - Executa os relatórios
+
+3. **Verifique os dados**
+   ```sql
+   SELECT 'clientes' AS tabela, COUNT(*) AS total FROM clientes
+   UNION ALL
+   SELECT 'produtos', COUNT(*) FROM produtos;
+   ```
+
+---
+
+## 💻 Tecnologias
+
+- **PostgreSQL 15** - Sistema de gerenciamento de banco de dados
+- **Supabase** - Plataforma de banco de dados como serviço
+- **SQL** - Linguagem de consulta estruturada
+- **Draw.io** - Criação do DER
+
+---
+
+## 📁 Estrutura do Repositório
+
+```
+ecommerce-techstore-database/
+│
+├── diagramas/
+│   └── der_ecommerce.png
+│
+├── scripts/
+│   ├── 01_create_tables.sql
+│   ├── 02_insert_data_FIXED.sql
+│   ├── 03_crud_operations.sql
+│   └── 04_reports.sql
+│
+├── prints/
+│   ├── crud/
+│   │   ├── 01_create.png
+│   │   ├── 02_read.png
+│   │   ├── 03_update.png
+│   │   └── 04_delete.png
+│   └── relatorios/
+│       ├── relatorio_01_top_clientes.png
+│       ├── relatorio_02_produtos_vendidos.png
+│       ├── relatorio_03_vendas_categoria.png
+│       ├── relatorio_04_pedidos_status.png
+│       └── relatorio_05_avaliacoes.png
+│
+├── Modelagem_Logica_TechStore_FINAL.pdf
+└── README.md
+```
+
+---
+
+## ✅ Requisitos Atendidos
+
+- [x] Cenário detalhado com problema e solução
+- [x] Mínimo de 5 entidades (9 criadas)
+- [x] Atributo Simples
+- [x] Atributo Composto (endereco_completo)
+- [x] Atributo Multivalorado (emails)
+- [x] Atributo Derivado (idade, valor_total, subtotal)
+- [x] Chave Primária em todas as tabelas
+- [x] Relacionamento 1:1
+- [x] Relacionamento 1:N (múltiplos)
+- [x] Relacionamento N:N (PEDIDOS ↔ PRODUTOS)
+- [x] Modelagem Conceitual (DER)
+- [x] Modelagem Lógica
+- [x] Modelagem Física (scripts SQL)
+- [x] 500+ registros em cada tabela
+- [x] Operações CRUD completas
+- [x] 10 consultas SQL com relatórios
+
+---
+
+## 👨‍💻 Autor
+
+**Pedro Henrique Alves**
+
+- GitHub: [@pedrohenriqueff90](https://github.com/pedrohenriqueff90)
+- Email: pedrohenrique.alves@fatec.sp.gov.br
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido como trabalho acadêmico para a disciplina de Modelagem de Banco de Dados da FATEC Franca.
+
+---
+
+## 🙏 Agradecimentos
+
+Agradeço ao professor Marcio Maestrelo Funes pela orientação durante o desenvolvimento deste projeto e aos colegas de turma pelas discussões e aprendizados compartilhados.
+
+---
+
+<div align="center">
+  <strong>Desenvolvido com 💙 por Pedro Henrique Alves</strong>
+</div>
